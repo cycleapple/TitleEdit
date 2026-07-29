@@ -101,7 +101,7 @@ namespace TitleEdit.PluginServices
             if (!Services.ConfigurationService.TrackPlayerLocation || (DateTime.Now - lastLocationCollection).TotalSeconds < 2) return;
             if (Services.ObjectTable.LocalPlayer != null)
             {
-                lastContentId = Services.PlayerState.ContentId;
+                lastContentId = Services.ClientState.LocalContentId;
                 if (TerritoryPath != null)
                 {
                     var locationModel = locations.TryGetValue(lastContentId, out var location) ? location : new();
@@ -220,7 +220,7 @@ namespace TitleEdit.PluginServices
         //Hook on whatever deletes stuff (and maybe adds) so we can get rid of the constant refreshing cause in solution 9 it might cause lag spikes
         private unsafe void LayoutInstanceSetActive(ILayoutInstance* layout, byte active)
         {
-            if (Services.ConfigurationService.SaveLayout && !refreshLayout && Services.PlayerState.IsLoaded && locations.TryGetValue(Services.PlayerState.ContentId, out var locationModel))
+            if (Services.ConfigurationService.SaveLayout && !refreshLayout && Services.ClientState.IsLoggedIn && locations.TryGetValue(Services.ClientState.LocalContentId, out var locationModel))
             {
                 var inActive = locationModel.Active.Contains(layout->UUID());
                 var inInactive = locationModel.Inactive.Contains(layout->UUID());

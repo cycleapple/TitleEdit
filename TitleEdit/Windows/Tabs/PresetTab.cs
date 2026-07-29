@@ -807,7 +807,9 @@ namespace TitleEdit.Windows.Tabs
             makingNewPreset = true;
             currentPreset = "";
             preset = new();
-            preset.Author = Services.ConfigurationService.UseCharacterNameAsAuthor ? Services.PlayerState.CharacterName : Services.ConfigurationService.DefaultAuthorName;
+            preset.Author = Services.ConfigurationService.UseCharacterNameAsAuthor
+                ? Services.ClientState.LocalPlayer?.Name.TextValue ?? Services.ConfigurationService.DefaultAuthorName
+                : Services.ConfigurationService.DefaultAuthorName;
             preset.LocationModel.LocationType = LocationType.TitleScreen;
             LoadCurrentTerritory();
             preset.LocationModel.WeatherId = Services.WeatherService.WeatherId;

@@ -33,7 +33,7 @@ namespace TitleEdit.PluginServices
         public override void Init()
         {
             Services.Framework.Update += Tick;
-            if (Services.PlayerState.IsLoaded)
+            if (Services.ClientState.IsLoggedIn)
             {
                 RefreshMounts();
             }
@@ -41,7 +41,7 @@ namespace TitleEdit.PluginServices
 
         private void Tick(IFramework framework)
         {
-            if (Services.PlayerState.IsLoaded)
+            if (Services.ClientState.IsLoggedIn)
             {
                 unsafe
                 {
@@ -92,7 +92,7 @@ namespace TitleEdit.PluginServices
 
         public unsafe void RefreshMounts()
         {
-            if (Services.PlayerState.IsLoaded)
+            if (Services.ClientState.IsLoggedIn)
             {
                 var playerState = PlayerState.Instance();
                 if (playerState != null)

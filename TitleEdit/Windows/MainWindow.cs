@@ -33,12 +33,12 @@ public class MainWindow : Window, IDisposable
     {
         unsafe
         {
-            ImGui.TextUnformatted($"Current character {Services.PlayerState.ContentId:X16}");
+            ImGui.TextUnformatted($"Current character {Services.ClientState.LocalContentId:X16}");
             ImGui.TextUnformatted(
                 $"Selected character {(IntPtr)Services.LobbyService.CurrentCharacter:X16} - {Services.LobbyService.CurrentContentId:X16}");
             ImGui.TextUnformatted($"Current weather {Services.WeatherService.WeatherId}");
             ImGui.TextUnformatted($"Current lobbymap {Services.LobbyService.CurrentLobbyMap}");
-            var location = Services.LocationService.GetLocationModel(Services.PlayerState.ContentId);
+            var location = Services.LocationService.GetLocationModel(Services.ClientState.LocalContentId);
             ImGui.TextUnformatted(
                 $"Current layout {location.Active.Count} {location.Inactive.Count} {location.VfxTriggerIndexes.Count}");
             //ImGui.TextUnformatted($"Current layout2 {Services.LocationService.Active.Count} {Services.LocationService.Inactive.Count} {Services.LocationService.VfxTriggerIndexes.Count}");

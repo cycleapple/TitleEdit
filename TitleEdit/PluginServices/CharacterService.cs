@@ -28,10 +28,10 @@ namespace TitleEdit.PluginServices
 
         public override void Init()
         {
-            if (Services.ObjectTable.LocalPlayer != null)
+            if (Services.ClientState.LocalPlayer is { } localPlayer)
             {
-                var world = Services.DataManager.GetExcelSheet<World>(ClientLanguage.English).GetRow(Services.PlayerState.HomeWorld.RowId);
-                PutCharacter(Services.PlayerState.ContentId, $"{Services.PlayerState.CharacterName}@{world.Name}");
+                var world = Services.DataManager.GetExcelSheet<World>(ClientLanguage.English).GetRow(localPlayer.HomeWorld.RowId);
+                PutCharacter(Services.ClientState.LocalContentId, $"{localPlayer.Name.TextValue}@{world.Name}");
             }
 
             foreach (var entry in Services.LobbyService.GetCurrentCharacterNames())

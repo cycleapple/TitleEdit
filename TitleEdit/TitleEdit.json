@@ -1,13 +1,13 @@
 {
     "Author": "attick, perchbird & Speedas",
     "Name": "Title Edit",
-    "Punchline": "Create, share, and shuffle custom title and character select screens for FFXIV.",
-    "Description": "Create your own custom title or character select screen of your favorite location in-game, and open the game right up to that spot every time.\nIncludes a number of preinstalled title and character select screen presets for you to use or get inspiration from, and an easy to use importer to use presets that others have shared!\nCharacter select presets support recording your last visited location, per character display setting and even displaying yourself on a mount.",
+    "Punchline": "建立、分享並隨機切換自訂標題與角色選擇畫面。",
+    "Description": "使用遊戲內喜愛的地點建立自訂標題或角色選擇畫面，並可匯入其他玩家分享的預設。\n角色選擇預設支援記錄最後到訪地點、依角色設定顯示方式，以及讓角色騎乘坐騎。",
     "LoadRequiredState": 2,
     "LoadSync": true,
     "CanUnloadAsync": false,
     "ApplicableVersion": "any",
-    "RepoUrl": "https://github.com/RokasKil/TitleEdit",
+    "RepoUrl": "https://github.com/cycleapple/TitleEdit/tree/api13-tw",
     "Tags": [
         "UI"
     ]

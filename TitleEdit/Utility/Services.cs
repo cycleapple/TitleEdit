@@ -1,4 +1,5 @@
 using Dalamud.Game;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -42,10 +43,7 @@ namespace TitleEdit.Utility
         public static INotificationManager NotificationManager { get; set; } = null!;
         [PluginService]
         public static IChatGui ChatGui { get; set; } = null!;
-        [PluginService]
-        public static IObjectTable ObjectTable { get; set; } = null!;
-        [PluginService]
-        public static IPlayerState PlayerState { get; set; } = null!;
+        public static ObjectTableCompatibility ObjectTable { get; } = new();
         public static IDalamudPluginInterface PluginInterface { get; set; } = null!;
         public static ConfigurationService ConfigurationService { get; set; } = null!;
         public static LayoutService LayoutService { get; set; } = null!;
@@ -135,5 +133,10 @@ namespace TitleEdit.Utility
             Disposed = true;
             ServiceList.ForEach(service => service.Dispose());
         }
+    }
+
+    public sealed class ObjectTableCompatibility
+    {
+        public IPlayerCharacter? LocalPlayer => Services.ClientState.LocalPlayer;
     }
 }
