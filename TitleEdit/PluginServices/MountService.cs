@@ -17,7 +17,7 @@ namespace TitleEdit.PluginServices
         private HashSet<uint> mounts = [];
 
         private readonly string filePath;
-        private byte[]? lastMountBytes;
+        private DateTime nextMountCheckAt;
 
         public MountService()
         {
@@ -41,23 +41,13 @@ namespace TitleEdit.PluginServices
 
         private void Tick(IFramework framework)
         {
-            if (Services.ClientState.IsLoggedIn)
+            if (!Services.ClientState.IsLoggedIn || DateTime.UtcNow < nextMountCheckAt)
             {
-                unsafe
-                {
-                    var playerState = PlayerState.Instance();
-                    if (playerState != null)
-                    {
-                        lastMountBytes ??= new byte[playerState->UnlockedMounts.Length];
-                        if (!playerState->UnlockedMounts.SequenceEqual(lastMountBytes))
-                        {
-                            Services.Log.Debug("Mounts changed!");
-                            playerState->UnlockedMounts.CopyTo(lastMountBytes);
-                            RefreshMounts();
-                        }
-                    }
-                }
+                return;
             }
+
+            nextMountCheckAt = DateTime.UtcNow.AddSeconds(2);
+            RefreshMounts();
         }
 
         private void LoadMounts()
@@ -92,6 +82,7 @@ namespace TitleEdit.PluginServices
 
         public unsafe void RefreshMounts()
         {
+            var changed = false;
             if (Services.ClientState.IsLoggedIn)
             {
                 var playerState = PlayerState.Instance();
@@ -102,13 +93,17 @@ namespace TitleEdit.PluginServices
                         if (playerState->IsMountUnlocked(mount.RowId))
                         {
                             //Services.Log.Info($"Mount unlocked {mount.Singular.ToString()}");
-                            mounts.Add(mount.RowId);
+                            changed |= mounts.Add(mount.RowId);
                         }
                     }
                 }
             }
 
-            SaveMounts();
+            if (changed)
+            {
+                Services.Log.Debug("Mounts changed!");
+                SaveMounts();
+            }
         }
 
 
