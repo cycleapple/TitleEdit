@@ -38,7 +38,7 @@ public sealed class Plugin : IDalamudPlugin
         Services.PluginInterface.UiBuilder.RunWhenUiPrepared(() =>
         {
             var image = Services.TextureProvider.GetFromManifestResource(Assembly.GetExecutingAssembly(), "TitleEdit.menu_icon.png");
-            Services.TitleScreenMenu.AddEntry("Title Edit Menu", image, ToggleConfigUI);
+            Services.TitleScreenMenu.AddEntry("Title Edit 選單", image, ToggleConfigUI);
             return true;
         });
 
@@ -51,7 +51,7 @@ public sealed class Plugin : IDalamudPlugin
 
         Services.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open Title Edit configuration"
+            HelpMessage = "開啟 Title Edit 設定"
         });
         Services.CommandManager.AddHandler(CommandNameAlias, new CommandInfo(OnCommand)
         {
@@ -86,17 +86,17 @@ public sealed class Plugin : IDalamudPlugin
         if (args == "migrate presets")
         {
             var migratedCount = Services.MigrationService.MigrateTitleScreenV2Presets();
-            Services.ChatGui.Print($"Migrated {migratedCount} presets", "Title Edit");
+            Services.ChatGui.Print($"已移轉 {migratedCount} 個預設", "Title Edit");
         }
         else if (args == "migrate settings")
         {
             if (Services.MigrationService.MigrateTitleScreenV2Configuration())
             {
-                Services.ChatGui.Print($"Migrated v2 config", "Title Edit");
+                Services.ChatGui.Print($"已移轉 V2 設定", "Title Edit");
             }
             else
             {
-                Services.ChatGui.Print($"Couldn't find v2 config", "Title Edit");
+                Services.ChatGui.Print($"找不到 V2 設定", "Title Edit");
             }
         }
         else

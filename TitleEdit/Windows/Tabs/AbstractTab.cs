@@ -42,13 +42,13 @@ namespace TitleEdit.Windows.Tabs
             this.modalContent = modalContent;
         }
 
-        protected void SetupError(Exception ex) => SetupModal("Error", DrawError, ex);
+        protected void SetupError(Exception ex) => SetupModal("錯誤", DrawError, ex);
 
         protected void DrawError()
         {
-            ImGui.TextUnformatted("Error encountered: ");
+            ImGui.TextUnformatted("發生錯誤：");
             ImGui.TextUnformatted($"{lastException?.Message}");
-            if (ImGui.Button("Ok")) CloseModal();
+            if (ImGui.Button("確定##Error Ok")) CloseModal();
         }
 
         protected void CloseModal() => modal = false;

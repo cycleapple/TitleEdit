@@ -12,7 +12,7 @@ namespace TitleEdit.Windows.Tabs
 {
     internal class GroupTab : AbstractTab
     {
-        public override string Title => "Groups";
+        public override string Title => "群組";
 
         bool makingNewGroup = false;
         string currentGroup = "";
@@ -34,8 +34,8 @@ namespace TitleEdit.Windows.Tabs
             {
                 currentGroupName = group.LocationType switch
                 {
-                    LocationType.TitleScreen => "Unsaved Title Screen group",
-                    LocationType.CharacterSelect => "Unsaved Character Select group",
+                    LocationType.TitleScreen => "尚未儲存的標題畫面群組",
+                    LocationType.CharacterSelect => "尚未儲存的角色選擇畫面群組",
                     _ => throw new Exception()
                 };
                 ImGui.PushStyleColor(ImGuiCol.Text, GuiUtils.WarningColor);
@@ -86,15 +86,15 @@ namespace TitleEdit.Windows.Tabs
             }
 
             ImGui.EndDisabled();
-            GuiUtils.HoverTooltip("Duplicate group");
+            GuiUtils.HoverTooltip("複製群組");
             ImGui.BeginDisabled(makingNewGroup);
-            if (ImGui.Button($"New Title Screen group"))
+            if (ImGui.Button($"新增標題畫面群組##New Title Screen group"))
             {
                 NewGroup(LocationType.TitleScreen);
             }
 
             ImGui.SameLine();
-            if (ImGui.Button($"New Character Select group"))
+            if (ImGui.Button($"新增角色選擇畫面群組##New Character Select group"))
             {
                 NewGroup(LocationType.CharacterSelect);
             }
@@ -106,9 +106,9 @@ namespace TitleEdit.Windows.Tabs
         {
             ImGui.BeginDisabled(!makingNewGroup && currentGroup == "");
 
-            ImGui.InputText($"Name", ref group.Name, 256);
+            ImGui.InputText($"名稱##Group Name", ref group.Name, 256);
             var tableHeight = MathF.Max(1f, MathF.Min(8f, group.PresetFileNames.Count) * (ImGui.CalcTextSize(" ").Y + ImGui.GetStyle().CellPadding.Y * 2 + ImGui.GetStyle().FramePadding.Y * 2));
-            using (var table = ImRaii.Table($"Group entries", 2, ImGuiTableFlags.ScrollY, new(0f, tableHeight)))
+            using (var table = ImRaii.Table($"群組項目##Group entries", 2, ImGuiTableFlags.ScrollY, new(0f, tableHeight)))
             {
                 if (table)
                 {
@@ -133,7 +133,7 @@ namespace TitleEdit.Windows.Tabs
                         }
                         else
                         {
-                            display = "Invalid preset";
+                            display = "無效的預設";
                             invalid = true;
                         }
 
@@ -173,7 +173,7 @@ namespace TitleEdit.Windows.Tabs
                 }
             }
 
-            if (ImGui.Button($"Add preset"))
+            if (ImGui.Button($"加入預設##Add preset"))
             {
                 group.PresetFileNames.Add(null);
             }
@@ -184,7 +184,7 @@ namespace TitleEdit.Windows.Tabs
         private void DrawGroupActions()
         {
             ImGui.BeginDisabled(!makingNewGroup && currentGroup == "");
-            if (ImGui.Button($"Save"))
+            if (ImGui.Button($"儲存##Save group"))
             {
                 try
                 {
@@ -201,14 +201,14 @@ namespace TitleEdit.Windows.Tabs
             ImGui.SameLine();
             if (makingNewGroup)
             {
-                if (ImGui.Button($"Cancel"))
+                if (ImGui.Button($"取消##Cancel group"))
                 {
                     ClearGroup();
                 }
             }
             else
             {
-                if (ImGui.Button($"Delete"))
+                if (ImGui.Button($"刪除##Delete group"))
                 {
                     SetupDeleteConfirmation();
                 }
@@ -265,12 +265,12 @@ namespace TitleEdit.Windows.Tabs
             group.LocationType = type;
         }
 
-        private void SetupDeleteConfirmation() => SetupModal("Delete a group", DrawDeleteConfirmation);
+        private void SetupDeleteConfirmation() => SetupModal("刪除群組", DrawDeleteConfirmation);
 
         private void DrawDeleteConfirmation()
         {
-            ImGui.TextUnformatted("Are you sure you want to delete the preset, this is unrecoverable.");
-            if (ImGui.Button("Yes"))
+            ImGui.TextUnformatted("確定要刪除此群組嗎？此操作無法復原。");
+            if (ImGui.Button("是##Confirm delete group"))
             {
                 modal = false;
                 try
@@ -285,7 +285,7 @@ namespace TitleEdit.Windows.Tabs
             }
 
             ImGui.SameLine();
-            if (ImGui.Button("No")) modal = false;
+            if (ImGui.Button("否##Cancel delete group")) modal = false;
         }
     }
 }

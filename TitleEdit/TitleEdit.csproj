@@ -2,7 +2,7 @@
 <Project Sdk="Dalamud.NET.Sdk/13.0.0">
 
     <PropertyGroup>
-        <Version>3.0.6.20</Version>
+        <Version>3.0.6.21</Version>
         <PackageProjectUrl>https://github.com/cycleapple/TitleEdit/tree/api13-tw</PackageProjectUrl>
         <TargetFramework>net9.0-windows</TargetFramework>
     </PropertyGroup>

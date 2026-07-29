@@ -12,57 +12,57 @@ namespace TitleEdit.Windows.Tabs
 {
     internal class DisplayTypeTab : AbstractTab
     {
-        public override string Title => "Display";
+        public override string Title => "顯示";
 
         private ulong currentContentId = 0;
 
         public override void Draw()
         {
             base.Draw();
-            ImGui.TextUnformatted("Title screen");
-            DrawSelectPresetCombo($"Title screen setting", Services.ConfigurationService.TitleDisplayTypeOption, (result) =>
+            ImGui.TextUnformatted("標題畫面");
+            DrawSelectPresetCombo($"標題畫面設定##Title screen setting", Services.ConfigurationService.TitleDisplayTypeOption, (result) =>
             {
                 Services.ConfigurationService.TitleDisplayTypeOption = result;
                 Services.LobbyService.ReloadTitleScreen();
             });
-            if (GuiUtils.Combo($"Default title screen logo", ref Services.ConfigurationService.TitleScreenLogo, filter: (entry) => entry != TitleScreenLogo.Unspecified))
+            if (GuiUtils.Combo($"預設標題畫面標誌##Default title screen logo", ref Services.ConfigurationService.TitleScreenLogo, filter: (entry) => entry != TitleScreenLogo.Unspecified))
             {
                 Services.ConfigurationService.Save();
                 Services.LobbyService.ReloadTitleScreenUi();
             }
 
-            if (ImGui.Checkbox($"Override preset title screen logo setting", ref Services.ConfigurationService.OverridePresetTitleScreenLogo))
+            if (ImGui.Checkbox($"覆寫預設中的標題畫面標誌設定##Override preset title screen logo", ref Services.ConfigurationService.OverridePresetTitleScreenLogo))
             {
                 Services.ConfigurationService.Save();
                 Services.LobbyService.ReloadTitleScreenUi();
             }
 
-            if (GuiUtils.DrawUiColorPicker("Default title screen colors", ref Services.ConfigurationService.TitleScreenColor))
+            if (GuiUtils.DrawUiColorPicker("預設標題畫面色彩##Default title screen colors", ref Services.ConfigurationService.TitleScreenColor))
             {
                 Services.ConfigurationService.Save();
                 Services.LobbyService.RecolorTitleScreenUi();
             }
 
-            if (ImGui.Checkbox($"Override preset title screen colors", ref Services.ConfigurationService.OverridePresetTitleScreenColor))
+            if (ImGui.Checkbox($"覆寫預設中的標題畫面色彩##Override preset title screen colors", ref Services.ConfigurationService.OverridePresetTitleScreenColor))
             {
                 Services.ConfigurationService.Save();
                 Services.LobbyService.RecolorTitleScreenUi();
             }
 
-            if (GuiUtils.Combo($"Default title screen movie", ref Services.ConfigurationService.TitleScreenMovie, filter: (entry) => entry != TitleScreenMovie.Unspecified))
+            if (GuiUtils.Combo($"預設標題畫面影片##Default title screen movie", ref Services.ConfigurationService.TitleScreenMovie, filter: (entry) => entry != TitleScreenMovie.Unspecified))
             {
                 Services.ConfigurationService.Save();
             }
 
-            ImGuiComponents.HelpMarker("Defines the cinematic that plays when idling in title screen for 60 seconds");
-            if (ImGui.Checkbox($"Override preset title screen movie setting", ref Services.ConfigurationService.OverridePresetTitleScreenMovie))
+            ImGuiComponents.HelpMarker("設定在標題畫面閒置 60 秒後播放的開場影片。");
+            if (ImGui.Checkbox($"覆寫預設中的標題畫面影片設定##Override preset title screen movie", ref Services.ConfigurationService.OverridePresetTitleScreenMovie))
             {
                 Services.ConfigurationService.Save();
             }
 
             ImGui.Separator();
-            ImGui.TextUnformatted("Character select screen");
-            DrawSelectPresetCombo($"Nothing selected setting", Services.ConfigurationService.NoCharacterDisplayType, (result) =>
+            ImGui.TextUnformatted("角色選擇畫面");
+            DrawSelectPresetCombo($"未選擇角色時的設定##Nothing selected setting", Services.ConfigurationService.NoCharacterDisplayType, (result) =>
             {
                 Services.ConfigurationService.NoCharacterDisplayType = result;
                 unsafe
@@ -74,8 +74,8 @@ namespace TitleEdit.Windows.Tabs
                     }
                 }
             }, false);
-            ImGuiComponents.HelpMarker("Preset that is used when no character is selected");
-            DrawSelectPresetCombo($"Global character setting", Services.ConfigurationService.GlobalDisplayType, (result) =>
+            ImGuiComponents.HelpMarker("未選擇任何角色時使用的預設。");
+            DrawSelectPresetCombo($"所有角色的共用設定##Global character setting", Services.ConfigurationService.GlobalDisplayType, (result) =>
             {
                 Services.ConfigurationService.GlobalDisplayType = result;
 
@@ -91,13 +91,13 @@ namespace TitleEdit.Windows.Tabs
             });
 
 
-            if (GuiUtils.Combo($"Camera follow mode", ref Services.ConfigurationService.CameraFollowMode, filter: (mode) => mode != CameraFollowMode.Inherit))
+            if (GuiUtils.Combo($"鏡頭跟隨模式##Camera follow mode", ref Services.ConfigurationService.CameraFollowMode, filter: (mode) => mode != CameraFollowMode.Inherit))
             {
                 Services.ConfigurationService.Save();
             }
 
             ImGui.Separator();
-            ImGui.TextUnformatted("Character overrides");
+            ImGui.TextUnformatted("個別角色覆寫");
             var usedIds = new HashSet<ulong>(Services.ConfigurationService.DisplayTypeOverrides.Count);
             var tableHeight = MathF.Max(1f, MathF.Min(8f, Services.ConfigurationService.DisplayTypeOverrides.Count) * (ImGui.CalcTextSize(" ").Y + ImGui.GetStyle().CellPadding.Y * 2 + ImGui.GetStyle().FramePadding.Y * 2));
 
@@ -174,12 +174,12 @@ namespace TitleEdit.Windows.Tabs
 
                 if (empty)
                 {
-                    ImGui.TextUnformatted("All characters configured");
+                    ImGui.TextUnformatted("所有角色均已設定");
                 }
 
                 return false;
             });
-            ImGuiComponents.HelpMarker("These characters are collected from the character select screen.\nIf any are missing go through all the worlds with characters created.");
+            ImGuiComponents.HelpMarker("這些角色資料是從角色選擇畫面收集而來。\n若有角色遺漏，請依序切換至所有建立過角色的世界。");
             ImGui.SameLine();
             using var disabled = ImRaii.Disabled(currentContentId == 0);
             if (ImGuiComponents.IconButton($"##New", FontAwesomeIcon.Plus))
@@ -208,7 +208,7 @@ namespace TitleEdit.Windows.Tabs
             bool invalid = false;
             if (value.Type == CharacterDisplayType.LastLocation)
             {
-                display = "Last location";
+                display = "上次所在位置";
             }
             else if (value.Type == CharacterDisplayType.Preset)
             {
@@ -218,7 +218,7 @@ namespace TitleEdit.Windows.Tabs
                 }
                 else
                 {
-                    display = "Invalid preset";
+                    display = "無效的預設";
                     invalid = true;
                 }
             }
@@ -231,14 +231,14 @@ namespace TitleEdit.Windows.Tabs
                 else
                 {
                     {
-                        display = "Invalid group";
+                        display = "無效的群組";
                         invalid = true;
                     }
                 }
             }
             else
             {
-                display = "Something went wrong";
+                display = "發生未知錯誤";
                 invalid = true;
             }
 
@@ -251,7 +251,7 @@ namespace TitleEdit.Windows.Tabs
             {
                 if (showLastLocationOption)
                 {
-                    if (GuiUtils.FilterSelectable("Last location", value.Type == CharacterDisplayType.LastLocation))
+                    if (GuiUtils.FilterSelectable("上次所在位置##Last location", value.Type == CharacterDisplayType.LastLocation))
                     {
                         selectAction.Invoke(new()
                         {
@@ -320,7 +320,7 @@ namespace TitleEdit.Windows.Tabs
                 }
                 else
                 {
-                    display = "Invalid preset";
+                    display = "無效的預設";
                     invalid = true;
                 }
             }
@@ -333,14 +333,14 @@ namespace TitleEdit.Windows.Tabs
                 else
                 {
                     {
-                        display = "Invalid group";
+                        display = "無效的群組";
                         invalid = true;
                     }
                 }
             }
             else
             {
-                display = "Something went wrong";
+                display = "發生未知錯誤";
                 invalid = true;
             }
 

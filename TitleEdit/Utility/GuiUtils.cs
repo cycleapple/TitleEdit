@@ -70,7 +70,7 @@ namespace TitleEdit.Utility
                 }
 
                 string filter = ComboFilters[idHash];
-                ImGui.InputText($"Search", ref filter, 256);
+                ImGui.InputText($"搜尋##Search", ref filter, 256);
                 ComboFilters[idHash] = filter;
                 ImGui.Separator();
                 using var id = ImRaii.PushId("child");

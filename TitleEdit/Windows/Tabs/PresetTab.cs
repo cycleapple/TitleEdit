@@ -20,7 +20,7 @@ namespace TitleEdit.Windows.Tabs
     //TODO: split this class a bit
     internal class PresetTab : AbstractTab
     {
-        public override string Title => "Presets";
+        public override string Title => "預設";
 
         private PresetModel preset = new();
         private string currentPreset = "";
@@ -82,7 +82,7 @@ namespace TitleEdit.Windows.Tabs
             string currentPresetName;
             if (makingNewPreset)
             {
-                currentPresetName = "Unsaved preset";
+                currentPresetName = "尚未儲存的預設";
                 ImGui.PushStyleColor(ImGuiCol.Text, GuiUtils.WarningColor);
             }
             else if (currentPreset == "")
@@ -132,7 +132,7 @@ namespace TitleEdit.Windows.Tabs
                 }
             }
 
-            GuiUtils.HoverTooltip("Create new preset", ImGuiHoveredFlags.AllowWhenDisabled);
+            GuiUtils.HoverTooltip("建立新預設", ImGuiHoveredFlags.AllowWhenDisabled);
             ImGui.SameLine();
             using (ImRaii.Disabled(makingNewPreset || currentPreset == ""))
             {
@@ -142,8 +142,8 @@ namespace TitleEdit.Windows.Tabs
                 }
 
                 using (ImRaii.Enabled())
-                    GuiUtils.HoverTooltip("Duplicate preset");
-                if (ImGui.Button($"Export to clipboard"))
+                    GuiUtils.HoverTooltip("複製預設");
+                if (ImGui.Button($"匯出至剪貼簿##Export to clipboard"))
                 {
                     try
                     {
@@ -156,13 +156,13 @@ namespace TitleEdit.Windows.Tabs
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button($"Export to file"))
+                if (ImGui.Button($"匯出至檔案##Export to file"))
                 {
-                    fileDialogManager.SaveFileDialog($"Export preset", ".json", preset.FileName, ".json", ExportPreset, Services.ConfigurationService.LastExportLocation, true);
+                    fileDialogManager.SaveFileDialog($"匯出預設", ".json", preset.FileName, ".json", ExportPreset, Services.ConfigurationService.LastExportLocation, true);
                 }
             }
 
-            if (ImGui.Button($"Import from clipboard"))
+            if (ImGui.Button($"從剪貼簿匯入##Import from clipboard"))
             {
                 try
                 {
@@ -176,9 +176,9 @@ namespace TitleEdit.Windows.Tabs
             }
 
             ImGui.SameLine();
-            if (ImGui.Button($"Import from file"))
+            if (ImGui.Button($"從檔案匯入##Import from file"))
             {
-                fileDialogManager.OpenFileDialog($"Import preset", ".json", ImportPreset, 1, Services.ConfigurationService.LastImportLocation, true);
+                fileDialogManager.OpenFileDialog($"匯入預設", ".json", ImportPreset, 1, Services.ConfigurationService.LastImportLocation, true);
             }
         }
 
@@ -188,18 +188,18 @@ namespace TitleEdit.Windows.Tabs
 
             using var disabled = ImRaii.Disabled(!makingNewPreset && currentPreset == "");
             // Preset metadata
-            ImGui.InputText($"Name", ref preset.Name, 256);
-            ImGui.InputText($"Author", ref preset.Author, 256);
+            ImGui.InputText($"名稱##Preset Name", ref preset.Name, 256);
+            ImGui.InputText($"作者##Preset Author", ref preset.Author, 256);
             using (ImRaii.Disabled(liveEditing))
             {
-                GuiUtils.Combo($"Preset Type", ref preset.LocationModel.LocationType);
+                GuiUtils.Combo($"預設類型##Preset Type", ref preset.LocationModel.LocationType);
             }
 
             // World stuff
             // Zone
             if (Services.DataManager.GetExcelSheet<TerritoryType>().TryGetRow(preset.LocationModel.TerritoryTypeId, out var territory))
             {
-                ImGui.TextUnformatted($"Zone: {territory.RowId} - {territory.PlaceNameRegion.Value.Name} > {territory.PlaceName.Value.Name}");
+                ImGui.TextUnformatted($"區域：{territory.RowId} - {territory.PlaceNameRegion.Value.Name} > {territory.PlaceName.Value.Name}");
             }
             else
             {
@@ -648,12 +648,12 @@ namespace TitleEdit.Windows.Tabs
 
             ImGuiComponents.HelpMarker("Festivals are event decorations");
 
-            ImGui.TextUnformatted($"Preset file: {preset.FileName}");
+            ImGui.TextUnformatted($"預設檔案：{preset.FileName}");
             using (var color = ImRaii.PushColor(ImGuiCol.Text, GuiUtils.WarningColor))
             {
                 if (liveEditing)
                 {
-                    ImGui.TextUnformatted($"Live editing mode enabled!");
+                    ImGui.TextUnformatted($"即時編輯模式已啟用！");
                 }
             }
         }
@@ -661,7 +661,7 @@ namespace TitleEdit.Windows.Tabs
         public void DrawPresetActions()
         {
             using var buttonsDisabled = ImRaii.Disabled(!makingNewPreset && currentPreset == "");
-            if (ImGui.Button($"Save"))
+            if (ImGui.Button($"儲存##Save preset"))
             {
                 try
                 {
@@ -696,7 +696,7 @@ namespace TitleEdit.Windows.Tabs
             {
                 if (!liveEditing)
                 {
-                    if (ImGui.Button($"Live edit"))
+                    if (ImGui.Button($"即時編輯##Live edit"))
                     {
                         Services.LobbyService.StartLiveEdit(preset);
                         liveEditing = true;
@@ -706,12 +706,12 @@ namespace TitleEdit.Windows.Tabs
                     if (disabled.Success && !buttonsDisabled.Success)
                     {
                         using (ImRaii.Enabled())
-                            GuiUtils.HoverTooltip($"Only works in title or character select screen depending on the selected preset", ImGuiHoveredFlags.AllowWhenDisabled);
+                            GuiUtils.HoverTooltip($"依所選預設而定，此功能只能在標題畫面或角色選擇畫面使用。", ImGuiHoveredFlags.AllowWhenDisabled);
                     }
                 }
             }
 
-            if (liveEditing && ImGui.Button($"Stop live edit"))
+            if (liveEditing && ImGui.Button($"停止即時編輯##Stop live edit"))
             {
                 StopLiveEdit();
             }
@@ -719,14 +719,14 @@ namespace TitleEdit.Windows.Tabs
             ImGui.SameLine();
             if (makingNewPreset)
             {
-                if (ImGui.Button($"Cancel"))
+                if (ImGui.Button($"取消##Cancel preset"))
                 {
                     ClearPreset();
                 }
             }
             else
             {
-                if (ImGui.Button($"Delete"))
+                if (ImGui.Button($"刪除##Delete preset"))
                 {
                     SetupDeleteConfirmation();
                 }
@@ -870,12 +870,12 @@ namespace TitleEdit.Windows.Tabs
             });
         }
 
-        private void SetupDeleteConfirmation() => SetupModal("Delete a preset", DrawDeleteConfirmation);
+        private void SetupDeleteConfirmation() => SetupModal("刪除預設", DrawDeleteConfirmation);
 
         private void DrawDeleteConfirmation()
         {
-            ImGui.TextUnformatted("Are you sure you want to delete the preset, this is unrecoverable.");
-            if (ImGui.Button("Yes"))
+            ImGui.TextUnformatted("確定要刪除此預設嗎？此操作無法復原。");
+            if (ImGui.Button("是##Confirm delete preset"))
             {
                 CloseModal();
                 try
@@ -890,15 +890,15 @@ namespace TitleEdit.Windows.Tabs
             }
 
             ImGui.SameLine();
-            if (ImGui.Button("No")) CloseModal();
+            if (ImGui.Button("否##Cancel delete preset")) CloseModal();
         }
 
-        private void SetupImportSuccess() => SetupModal("Success", DrawImportSuccess);
+        private void SetupImportSuccess() => SetupModal("成功", DrawImportSuccess);
 
         private void DrawImportSuccess()
         {
-            ImGui.TextUnformatted($"Imported \"{preset.Name}\" successfully");
-            if (ImGui.Button("Ok")) CloseModal();
+            ImGui.TextUnformatted($"已成功匯入「{preset.Name}」");
+            if (ImGui.Button("確定##Import success")) CloseModal();
         }
 
         private void StopLiveEdit()
