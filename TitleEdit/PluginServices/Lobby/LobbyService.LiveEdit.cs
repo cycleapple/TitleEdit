@@ -40,7 +40,7 @@ namespace TitleEdit.PluginServices.Lobby
         public void UpdateLiveEditPreset(PresetModel preset)
         {
             // Services.Log.Debug($"[UpdateLiveEditPreset] {preset.Name}; {preset.Author}; {preset.LocationModel.LocationType}; {preset.FileName}");
-            preset.LocationModel.ToastNotificationText = $"Live editing a {preset.LocationModel.LocationType.ToText()} preset";
+            preset.LocationModel.ToastNotificationText = $"正在即時編輯{preset.LocationModel.LocationType.ToText()}預設";
             if (preset.LocationModel.LocationType == LocationType.TitleScreen)
             {
                 liveEditTitleScreenLocationModel = preset.LocationModel;

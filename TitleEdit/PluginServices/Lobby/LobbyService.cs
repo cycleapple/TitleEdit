@@ -352,7 +352,7 @@ namespace TitleEdit.PluginServices.Lobby
                 {
                     Content = message,
                     MinimizedText = message[..(!message.Contains('\n') ? message.Length : message.IndexOf('\n'))],
-                    Title = "Scene loaded",
+                    Title = "場景已載入",
                     Type = NotificationType.Info
                 });
             }

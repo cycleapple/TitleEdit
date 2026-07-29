@@ -4,21 +4,21 @@ namespace TitleEdit.Data.Persistence
 {
     public enum UiColorExpansion : int
     {
-        [EnumTranslation("Unspecified")]
+        [EnumTranslation("未指定")]
         Unspecified = -2,
-        [EnumTranslation("Custom")]
+        [EnumTranslation("自訂")]
         Custom = -1,
-        [EnumTranslation("A Realm Reborn")]
+        [EnumTranslation("新生艾歐澤亞")]
         ARealmReborn = 0,
-        [EnumTranslation("Heavensward")]
+        [EnumTranslation("蒼天伊修加德")]
         Heavensward = 1,
-        [EnumTranslation("Stormblood")]
+        [EnumTranslation("紅蓮之狂潮")]
         Stormblood = 2,
-        [EnumTranslation("Shadowbringers")]
+        [EnumTranslation("漆黑的反叛者")]
         Shadowbringers = 3,
-        [EnumTranslation("Endwalker")]
+        [EnumTranslation("曉月之終途")]
         Endwalker = 4,
-        [EnumTranslation("Dawntrail")]
+        [EnumTranslation("黃金的遺產")]
         Dawntrail = 5
     }
 }

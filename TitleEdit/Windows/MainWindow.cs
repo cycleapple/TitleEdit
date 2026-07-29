@@ -14,7 +14,7 @@ public class MainWindow : Window, IDisposable
     // So that the user will see "My Amazing Window" as window title,
     // but for ImGui the ID is "My Amazing Window##With a hidden ID"
     public MainWindow()
-        : base("My Amazing Debug Window##TitleScreen",
+        : base("Title Edit 偵錯視窗##TitleScreen",
                ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         SizeConstraints = new WindowSizeConstraints
@@ -33,54 +33,54 @@ public class MainWindow : Window, IDisposable
     {
         unsafe
         {
-            ImGui.TextUnformatted($"Current character {Services.ClientState.LocalContentId:X16}");
+            ImGui.TextUnformatted($"目前角色 {Services.ClientState.LocalContentId:X16}");
             ImGui.TextUnformatted(
-                $"Selected character {(IntPtr)Services.LobbyService.CurrentCharacter:X16} - {Services.LobbyService.CurrentContentId:X16}");
-            ImGui.TextUnformatted($"Current weather {Services.WeatherService.WeatherId}");
-            ImGui.TextUnformatted($"Current lobbymap {Services.LobbyService.CurrentLobbyMap}");
+                $"所選角色 {(IntPtr)Services.LobbyService.CurrentCharacter:X16} - {Services.LobbyService.CurrentContentId:X16}");
+            ImGui.TextUnformatted($"目前天氣 {Services.WeatherService.WeatherId}");
+            ImGui.TextUnformatted($"目前大廳地圖 {Services.LobbyService.CurrentLobbyMap}");
             var location = Services.LocationService.GetLocationModel(Services.ClientState.LocalContentId);
             ImGui.TextUnformatted(
-                $"Current layout {location.Active.Count} {location.Inactive.Count} {location.VfxTriggerIndexes.Count}");
+                $"目前場景配置 {location.Active.Count} {location.Inactive.Count} {location.VfxTriggerIndexes.Count}");
             //ImGui.TextUnformatted($"Current layout2 {Services.LocationService.Active.Count} {Services.LocationService.Inactive.Count} {Services.LocationService.VfxTriggerIndexes.Count}");
             //ImGui.TextUnformatted($"Current layout3 {location.Active.All(Services.LocationService.Active.Contains)} {location.Inactive.All(Services.LocationService.Inactive.Contains)} {location.VfxTriggerIndexes.Keys.Count == Services.LocationService.VfxTriggerIndexes.Keys.Count && location.VfxTriggerIndexes.Keys.All(k => Services.LocationService.VfxTriggerIndexes.ContainsKey(k) && object.Equals(location.VfxTriggerIndexes[k], Services.LocationService.VfxTriggerIndexes[k]))}");
-            ImGui.TextUnformatted($"Current Song {Services.BgmService.CurrentSongId}");
-            ImGui.TextUnformatted($"Current LobbyMusicIndex {Services.LobbyService.LobbyInfo->CurrentLobbyMusicIndex}");
-            ImGui.TextUnformatted($"Current MountId {location.Mount.MountId}");
-            ImGui.TextUnformatted($"Update time {Services.LayoutService.UpdateTime}");
-            ImGui.SliderAngle($"test", ref test1, -360, 360);
-            ImGui.TextUnformatted($"Normalized {Utils.NormalizeAngle(test1) * Utils.RadToDegreeRatio}");
-            ImGui.SliderFloat($"Testing normalizer", ref test2, -720, 720);
+            ImGui.TextUnformatted($"目前曲目 {Services.BgmService.CurrentSongId}");
+            ImGui.TextUnformatted($"目前大廳音樂索引 {Services.LobbyService.LobbyInfo->CurrentLobbyMusicIndex}");
+            ImGui.TextUnformatted($"目前坐騎 ID {location.Mount.MountId}");
+            ImGui.TextUnformatted($"更新時間 {Services.LayoutService.UpdateTime}");
+            ImGui.SliderAngle($"測試##test", ref test1, -360, 360);
+            ImGui.TextUnformatted($"正規化結果 {Utils.NormalizeAngle(test1) * Utils.RadToDegreeRatio}");
+            ImGui.SliderFloat($"測試正規化##Testing normalizer", ref test2, -720, 720);
             ImGui.TextUnformatted(
-                $"Normalized {Utils.NormalizeAngle((float)(test2 * Utils.DegreeToRadRatio)) * Utils.RadToDegreeRatio}");
-            ImGui.TextUnformatted($"Time: {Services.LocationService.TimeOffset}");
-            if (ImGui.Button("Remigrate title screens"))
+                $"正規化結果 {Utils.NormalizeAngle((float)(test2 * Utils.DegreeToRadRatio)) * Utils.RadToDegreeRatio}");
+            ImGui.TextUnformatted($"時間：{Services.LocationService.TimeOffset}");
+            if (ImGui.Button("重新遷移標題畫面"))
             {
                 Services.MigrationService.MigrateTitleScreenV2Presets();
             }
 
             ImGui.TextUnformatted($"LobbyUiStage {Services.LobbyService.LobbyUiStage}");
             ImGui.TextUnformatted($"TitleCutsceneIsLoaded {Services.LobbyService.TitleCutsceneIsLoaded}");
-            if (ImGui.Button("Reload title screen UI"))
+            if (ImGui.Button("重新載入標題畫面介面"))
             {
                 Services.LobbyService.ReloadTitleScreenUi();
             }
 
-            if (ImGui.Button("Reload title screen colors"))
+            if (ImGui.Button("重新載入標題畫面色彩"))
             {
                 Services.LobbyService.RecolorTitleScreenUi();
             }
 
-            if (ImGui.Button("Reload title screen"))
+            if (ImGui.Button("重新載入標題畫面"))
             {
                 Services.LobbyService.ReloadTitleScreen();
             }
 
-            ImGui.TextUnformatted($"Available expansion {UIState.Instance()->PlayerState.MaxExpansion}");
-            if (ImGui.CollapsingHeader("Versions"))
+            ImGui.TextUnformatted($"可用資料片 {UIState.Instance()->PlayerState.MaxExpansion}");
+            if (ImGui.CollapsingHeader("版本"))
             {
                 var framework = Framework.Instance();
                 ImGui.TextUnformatted(
-                    $"Game version: {framework->GameVersionString} {framework->GameVersionString.Length}");
+                    $"遊戲版本：{framework->GameVersionString} {framework->GameVersionString.Length}");
                 ImGui.TextUnformatted(
                     $"Heavensward: {framework->ExVersions.GetValue(0)?.VersionString} {framework->ExVersions.GetValue(0)?.VersionString.Length}");
                 ImGui.TextUnformatted(
@@ -93,12 +93,12 @@ public class MainWindow : Window, IDisposable
                     $"Dawntrail: {framework->ExVersions.GetValue(4)?.VersionString} {framework->ExVersions.GetValue(4)?.VersionString.Length}");
             }
 
-            if (ImGui.Button("Housing test"))
+            if (ImGui.Button("房屋測試"))
             {
                 Services.LobbyService.HousingTest();
             }
 
-            ImGui.Checkbox("Ignore seasonal date checks", ref Services.ConfigurationService.IgnoreSeasonalDateCheck);
+            ImGui.Checkbox("忽略季節活動日期檢查", ref Services.ConfigurationService.IgnoreSeasonalDateCheck);
         }
     }
 }

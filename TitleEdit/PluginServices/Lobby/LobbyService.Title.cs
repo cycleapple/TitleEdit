@@ -142,8 +142,8 @@ namespace TitleEdit.PluginServices.Lobby
                     Services.Log.Warning($"[LeavingTitleScreen] Tried to load missing {LobbyInfo->CurrentTitleScreenMovieType.ToText()} movie");
                     Services.NotificationManager.AddNotification(new()
                     {
-                        Content = $"Tried to load missing {LobbyInfo->CurrentTitleScreenMovieType.ToText()} movie, adjust your settings or get the full game",
-                        Title = "Missing files",
+                        Content = $"嘗試載入缺少的「{LobbyInfo->CurrentTitleScreenMovieType.ToText()}」影片。請調整設定，或安裝完整版遊戲。",
+                        Title = "缺少檔案",
                         Type = NotificationType.Error,
                         Minimized = false
                     });

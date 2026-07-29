@@ -5,30 +5,30 @@ namespace TitleEdit.Data.Persistence
 {
     public enum TitleScreenLogo
     {
-        [EnumTranslation("None")]
+        [EnumTranslation("無")]
         None,
-        [EnumTranslation("Unspecified")]
+        [EnumTranslation("未指定")]
         Unspecified,
         [EnumExpansion(TitleScreenExpansion.ARealmReborn)]
-        [EnumTranslation("A Realm Reborn")]
+        [EnumTranslation("新生艾歐澤亞")]
         ARealmReborn,
         [EnumExpansion(TitleScreenExpansion.ARealmReborn)]
-        [EnumTranslation("FFXIV Free Trial")]
+        [EnumTranslation("FFXIV 免費試玩版")]
         FreeTrial,
         [EnumExpansion(TitleScreenExpansion.Heavensward)]
-        [EnumTranslation("Heavensward")]
+        [EnumTranslation("蒼天伊修加德")]
         Heavensward,
         [EnumExpansion(TitleScreenExpansion.Stormblood)]
-        [EnumTranslation("Stormblood")]
+        [EnumTranslation("紅蓮之狂潮")]
         Stormblood,
         [EnumExpansion(TitleScreenExpansion.Shadowbringers)]
-        [EnumTranslation("Shadowbringers")]
+        [EnumTranslation("漆黑的反叛者")]
         Shadowbringers,
         [EnumExpansion(TitleScreenExpansion.Endwalker)]
-        [EnumTranslation("Endwalker")]
+        [EnumTranslation("曉月之終途")]
         Endwalker,
         [EnumExpansion(TitleScreenExpansion.Dawntrail)]
-        [EnumTranslation("Dawntrail")]
+        [EnumTranslation("黃金的遺產")]
         Dawntrail
     }
 }

@@ -213,7 +213,7 @@ namespace TitleEdit.Utility
                 switch (type)
                 {
                     case CharacterDisplayType.LastLocation:
-                        ImGui.TextWrapped("Last recorded character location, if nothing was recorded will default to the Nothing selected option");
+                        ImGui.TextWrapped("使用最後記錄的角色位置；若沒有記錄，則使用「未選擇」選項。");
                         break;
                     case CharacterDisplayType.Preset:
                         DrawDisplayTypeTooltipPresetInfo(path, LocationType.CharacterSelect);
@@ -260,7 +260,7 @@ namespace TitleEdit.Utility
         {
             if (path != null && Services.PresetService.TryGetPreset(path, out var preset, type))
             {
-                ImGui.TextWrapped($"{preset.LocationModel.LocationType.ToText()} preset");
+                ImGui.TextWrapped($"{preset.LocationModel.LocationType.ToText()}預設");
                 if (preset.Tooltip != null)
                 {
                     ImGui.TextWrapped(preset.Tooltip.Replace("%", "%%"));
@@ -269,22 +269,22 @@ namespace TitleEdit.Utility
                 {
                     if (Services.DataManager.GetExcelSheet<TerritoryType>().TryGetRow(preset.LocationModel.TerritoryTypeId, out var territory))
                     {
-                        ImGui.TextWrapped($"Zone: {territory.RowId} - {territory.PlaceNameRegion.Value.Name} > {territory.PlaceName.Value.Name}");
+                        ImGui.TextWrapped($"區域：{territory.RowId} - {territory.PlaceNameRegion.Value.Name} > {territory.PlaceName.Value.Name}");
                     }
                     else
                     {
-                        ImGui.TextWrapped($"Zone: Unknown");
+                        ImGui.TextWrapped($"區域：未知");
                     }
 
                     if (!string.IsNullOrEmpty(preset.Author))
                     {
-                        ImGui.TextWrapped($"Author: {preset.Author.Replace("%", "%%")}");
+                        ImGui.TextWrapped($"作者：{preset.Author.Replace("%", "%%")}");
                     }
                 }
             }
             else
             {
-                ImGui.TextWrapped("Selected preset does not exist or failed to load");
+                ImGui.TextWrapped("所選預設不存在或載入失敗。");
             }
         }
 
@@ -292,19 +292,19 @@ namespace TitleEdit.Utility
         {
             if (path != null && Services.GroupService.TryGetGroup(path, out var group, type))
             {
-                ImGui.TextWrapped($"{group.LocationType.ToText()} group");
+                ImGui.TextWrapped($"{group.LocationType.ToText()}群組");
                 if (group.Tooltip != null)
                 {
                     ImGui.TextWrapped(group.Tooltip.Replace("%", "%%"));
                 }
                 else
                 {
-                    ImGui.TextWrapped($"Contains {group.PresetFileNames.Count} preset{(group.PresetFileNames.Count > 1 ? "s" : "")}");
+                    ImGui.TextWrapped($"包含 {group.PresetFileNames.Count} 個預設");
                 }
             }
             else
             {
-                ImGui.TextWrapped("Selected group does not exist or failed to load");
+                ImGui.TextWrapped("所選群組不存在或載入失敗。");
             }
         }
 
@@ -315,22 +315,22 @@ namespace TitleEdit.Utility
 
             if (colorModel.Expansion == UiColorExpansion.Custom)
             {
-                if (ImGui.ColorEdit4("Text color", ref colorModel.Color, ImGuiColorEditFlags.NoInputs))
+                if (ImGui.ColorEdit4("文字色彩##Text color", ref colorModel.Color, ImGuiColorEditFlags.NoInputs))
                 {
                     changed = true;
                 }
 
-                if (ImGui.ColorEdit4("Edge color", ref colorModel.EdgeColor, ImGuiColorEditFlags.NoInputs))
+                if (ImGui.ColorEdit4("邊緣色彩##Edge color", ref colorModel.EdgeColor, ImGuiColorEditFlags.NoInputs))
                 {
                     changed = true;
                 }
 
-                if (ImGui.ColorEdit4("Button highlight color", ref colorModel.HighlightColor, ImGuiColorEditFlags.NoInputs))
+                if (ImGui.ColorEdit4("按鈕醒目提示色彩##Button highlight color", ref colorModel.HighlightColor, ImGuiColorEditFlags.NoInputs))
                 {
                     changed = true;
                 }
 
-                ImGuiComponents.HelpMarker("The button highlight color will not be accurate, because the highlight image itself is blue, I tried to work around that by offsetting the color but it's not perfect");
+                ImGuiComponents.HelpMarker("按鈕醒目提示的色彩可能不完全準確，因為醒目提示圖片本身為藍色；目前已透過色彩偏移改善，但仍可能有些差異。");
                 var idHash = ImGui.GetID("");
                 var selection = UiColorPickerSelections.GetValueOrDefault(idHash, UiColorExpansion.Dawntrail);
                 if (Combo($"##selectExpansionToApply", ref selection, filter: (entry) => entry != UiColorExpansion.Unspecified && entry != UiColorExpansion.Custom))
@@ -339,7 +339,7 @@ namespace TitleEdit.Utility
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button($"Apply expansion colors"))
+                if (ImGui.Button($"套用版本主題色彩##Apply expansion colors"))
                 {
                     colorModel = UiColors.GetColorModelByExpansion(selection);
                     colorModel.Expansion = UiColorExpansion.Custom;

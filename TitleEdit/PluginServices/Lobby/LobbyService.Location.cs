@@ -58,11 +58,11 @@ namespace TitleEdit.PluginServices.Lobby
             {
                 if (Services.LocationService.Locations.TryGetValue(contentId, out model))
                 {
-                    model.ToastNotificationText = $"Now displaying last recorded location";
+                    model.ToastNotificationText = $"目前顯示最後記錄的位置";
                     //Should always have name but just in case
                     if (Services.CharactersService.Characters.TryGetValue(contentId, out var characterName))
                     {
-                        model.ToastNotificationText += $" for {characterName}";
+                        model.ToastNotificationText += $"（{characterName}）";
                     }
                 }
                 else
@@ -223,10 +223,10 @@ namespace TitleEdit.PluginServices.Lobby
             {
                 model = preset.LocationModel;
                 characterSelectLocationModel.CameraFollowMode = preset.CameraFollowMode;
-                model.ToastNotificationText = $"Now displaying: {preset.Name}";
+                model.ToastNotificationText = $"目前顯示：{preset.Name}";
                 if (!preset.Author.IsNullOrEmpty())
                 {
-                    model.ToastNotificationText += $"\nBy {preset.Author}";
+                    model.ToastNotificationText += $"\n作者：{preset.Author}";
                 }
             }
             else

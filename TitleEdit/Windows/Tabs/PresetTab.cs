@@ -53,7 +53,7 @@ namespace TitleEdit.Windows.Tabs
                 }));
             });
 
-            weathers = Services.DataManager.GetExcelSheet<Weather>()!.ToDictionary(weather => (byte)weather.RowId, weather => $"{weather.RowId} - {(!string.IsNullOrEmpty(weather.Name.ExtractText()) ? weather.Name : "Unknown")}");
+            weathers = Services.DataManager.GetExcelSheet<Weather>()!.ToDictionary(weather => (byte)weather.RowId, weather => $"{weather.RowId} - {(!string.IsNullOrEmpty(weather.Name.ExtractText()) ? weather.Name : "未知")}");
         }
 
         public override void Draw()
@@ -203,37 +203,37 @@ namespace TitleEdit.Windows.Tabs
             }
             else
             {
-                ImGui.TextUnformatted($"Zone: Unknown");
+                ImGui.TextUnformatted($"區域：未知");
             }
 
             if (Services.ObjectTable.LocalPlayer != null)
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(buttonPosX);
-                if (ImGui.Button($"Apply current##Zone"))
+                if (ImGui.Button($"套用目前區域##Zone"))
                 {
                     LoadCurrentTerritory();
                 }
 
                 if (Services.DataManager.GetExcelSheet<TerritoryType>().TryGetRow(Services.ClientState.TerritoryType, out var currentTerritory))
                 {
-                    GuiUtils.HoverTooltip($"Current zone: {currentTerritory.RowId} - {currentTerritory.PlaceNameRegion.Value.Name} > {currentTerritory.PlaceName.Value.Name}");
+                    GuiUtils.HoverTooltip($"目前區域：{currentTerritory.RowId} - {currentTerritory.PlaceNameRegion.Value.Name} > {currentTerritory.PlaceName.Value.Name}");
                 }
                 else
                 {
-                    GuiUtils.HoverTooltip($"Zone: Unknown");
+                    GuiUtils.HoverTooltip($"區域：未知");
                 }
             }
 #if DEBUG
 
-            if (ImGui.Button($"Save layout##Zone"))
+            if (ImGui.Button($"儲存場景配置##Zone"))
             {
                 Services.LocationService.SetLayout(ref preset.LocationModel);
             }
 #endif
             // Weather
             var weatherId = weathers.ContainsKey(preset.LocationModel.WeatherId) ? preset.LocationModel.WeatherId : 2;
-            GuiUtils.Combo($"Weather", weathers[preset.LocationModel.WeatherId], () =>
+            GuiUtils.Combo($"天氣##Weather", weathers[preset.LocationModel.WeatherId], () =>
             {
                 foreach (var rowId in Services.WeatherService.GetWeathers(preset.LocationModel.TerritoryPath))
                 {
@@ -256,37 +256,37 @@ namespace TitleEdit.Windows.Tabs
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(buttonPosX);
-                if (ImGui.Button($"Apply current##Weather"))
+                if (ImGui.Button($"套用目前天氣##Weather"))
                 {
                     preset.LocationModel.WeatherId = Services.WeatherService.WeatherId;
                 }
 
-                GuiUtils.HoverTooltip($"Current weather: {weathers[Services.WeatherService.WeatherId]}");
+                GuiUtils.HoverTooltip($"目前天氣：{weathers[Services.WeatherService.WeatherId]}");
             }
 
             // Time
             // time is stored as a 2 byte integer with HHMM structure
             var time = (int)preset.LocationModel.TimeOffset / 100 * 60 + preset.LocationModel.TimeOffset % 100;
-            if (ImGui.Checkbox($"Use Eorzea time", ref preset.LocationModel.UseLiveTime) && liveEditing)
+            if (ImGui.Checkbox($"使用艾歐澤亞時間##Use Eorzea time", ref preset.LocationModel.UseLiveTime) && liveEditing)
             {
                 UpdateLiveEdit();
                 Services.LobbyService.UpdateLiveEditTime(liveEditingLocationType);
             }
 
-            ImGuiComponents.HelpMarker("Use in-game time instead of a static time value.");
+            ImGuiComponents.HelpMarker("使用遊戲內的即時時間，而不是固定時間。");
 
             if (!preset.LocationModel.UseLiveTime)
             {
                 if (!liveEditing)
                 {
-                    if (ImGui.SliderInt($"Time", ref time, 0, 24 * 60 - 1, $"{time / 60:00}:{(time % 60):00}", ImGuiSliderFlags.AlwaysClamp | ImGuiSliderFlags.NoInput))
+                    if (ImGui.SliderInt($"時間##Time", ref time, 0, 24 * 60 - 1, $"{time / 60:00}:{(time % 60):00}", ImGuiSliderFlags.AlwaysClamp | ImGuiSliderFlags.NoInput))
                     {
                         preset.LocationModel.TimeOffset = (ushort)(time / 60 * 100 + time % 60);
                     }
                 }
                 else
                 {
-                    if (ImGui.DragInt($"Time##LiveEdit", ref time, 2, int.MinValue, int.MaxValue, $"{time / 60:00}:{(time % 60):00}", ImGuiSliderFlags.NoInput))
+                    if (ImGui.DragInt($"時間##LiveEdit", ref time, 2, int.MinValue, int.MaxValue, $"{time / 60:00}:{(time % 60):00}", ImGuiSliderFlags.NoInput))
                     {
                         time = (ushort)(Utils.Modulo(time, 24 * 60 - 1));
                         preset.LocationModel.TimeOffset = (ushort)(time / 60 * 100 + time % 60);
@@ -301,17 +301,17 @@ namespace TitleEdit.Windows.Tabs
                 var currentTime = Services.LocationService.TimeOffset;
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(buttonPosX);
-                if (ImGui.Button($"Apply current##Time"))
+                if (ImGui.Button($"套用目前時間##Time"))
                 {
                     preset.LocationModel.TimeOffset = (ushort)currentTime;
                 }
 
-                GuiUtils.HoverTooltip($"Current time: {currentTime / 100:00}:{(currentTime % 100):00}");
+                GuiUtils.HoverTooltip($"目前時間：{currentTime / 100:00}:{(currentTime % 100):00}");
             }
 
             // Song
             var bgmId = Services.BgmService.Bgms.ContainsKey(preset.LocationModel.BgmId) ? preset.LocationModel.BgmId : 0;
-            GuiUtils.FilterCombo($"Song", Services.BgmService.Bgms[bgmId].DisplayName, () =>
+            GuiUtils.FilterCombo($"背景音樂##Song", Services.BgmService.Bgms[bgmId].DisplayName, () =>
             {
                 foreach (var entry in Services.BgmService.Bgms)
                 {
@@ -339,7 +339,7 @@ namespace TitleEdit.Windows.Tabs
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(buttonPosX);
-                if (ImGui.Button($"Apply current##BGM"))
+                if (ImGui.Button($"套用目前曲目##BGM"))
                 {
                     preset.LocationModel.BgmId = Services.BgmService.CurrentSongId;
                     preset.LocationModel.BgmPath = Services.DataManager.GetExcelSheet<BGM>().TryGetRow((uint)Services.BgmService.CurrentSongId, out var row) ? row.File.ToString() : null;
@@ -347,11 +347,11 @@ namespace TitleEdit.Windows.Tabs
 
                 if (Services.BgmService.Bgms.TryGetValue(Services.BgmService.CurrentSongId, out var bgm))
                 {
-                    GuiUtils.HoverTooltip($"Current song: {bgm.DisplayName}");
+                    GuiUtils.HoverTooltip($"目前曲目：{bgm.DisplayName}");
                 }
                 else
                 {
-                    GuiUtils.HoverTooltip($"Current song: unknown");
+                    GuiUtils.HoverTooltip($"目前曲目：未知");
                 }
             }
 
@@ -361,9 +361,9 @@ namespace TitleEdit.Windows.Tabs
                 //Position
                 if (!liveEditing)
                 {
-                    ImGui.InputFloat3($"Position", ref preset.LocationModel.Position);
+                    ImGui.InputFloat3($"位置##Position", ref preset.LocationModel.Position);
                 }
-                else if (ImGui.DragFloat3($"Position##LiveEdit", ref preset.LocationModel.Position, 0.1f))
+                else if (ImGui.DragFloat3($"位置##LiveEdit", ref preset.LocationModel.Position, 0.1f))
                 {
                     UpdateLiveEdit();
                     Services.LobbyService.UpdateLiveEditCharacterPosition();
@@ -373,13 +373,13 @@ namespace TitleEdit.Windows.Tabs
                 {
                     ImGui.SameLine();
                     ImGui.SetCursorPosX(buttonPosX);
-                    if (ImGui.Button($"Apply current##Position"))
+                    if (ImGui.Button($"套用目前位置##Position"))
                     {
                         preset.LocationModel.Position = Services.ObjectTable.LocalPlayer!.Position;
                     }
 
                     var pos = Services.ObjectTable.LocalPlayer!.Position;
-                    GuiUtils.HoverTooltip($"Current Position: ({pos.X:F2}; {pos.Y:F2}; {pos.Z:F2})");
+                    GuiUtils.HoverTooltip($"目前位置：({pos.X:F2}; {pos.Y:F2}; {pos.Z:F2})");
                 }
 
                 // Rotation
@@ -397,12 +397,12 @@ namespace TitleEdit.Windows.Tabs
                 {
                     ImGui.SameLine();
                     ImGui.SetCursorPosX(buttonPosX);
-                    if (ImGui.Button($"Apply current##Rotation"))
+                    if (ImGui.Button($"套用目前旋轉角度##Rotation"))
                     {
                         preset.LocationModel.Rotation = Services.ObjectTable.LocalPlayer!.Rotation;
                     }
 
-                    GuiUtils.HoverTooltip($"Current rotation: {Services.ObjectTable.LocalPlayer!.Rotation * Utils.RadToDegreeRatio:F2}");
+                    GuiUtils.HoverTooltip($"目前旋轉角度：{Services.ObjectTable.LocalPlayer!.Rotation * Utils.RadToDegreeRatio:F2}");
                 }
 
                 // Character MovementMode
@@ -419,27 +419,27 @@ namespace TitleEdit.Windows.Tabs
                     unsafe
                     {
                         var character = (CharacterExpanded*)Services.ObjectTable.LocalPlayer.Address;
-                        if (ImGui.Button($"Apply current##moveType"))
+                        if (ImGui.Button($"套用目前移動模式##moveType"))
                         {
                             preset.LocationModel.MovementMode = character->MovementMode;
                         }
 
-                        GuiUtils.HoverTooltip($"Current mode: {character->MovementMode}");
+                        GuiUtils.HoverTooltip($"目前模式：{character->MovementMode}");
                     }
                 }
 
                 // Mount
                 var mountId = mounts.ContainsKey(preset.LocationModel.Mount.MountId) ? preset.LocationModel.Mount.MountId : 0;
-                var mountLabel = preset.LocationModel.Mount.LastLocationMount ? "Last used mount" : mounts[mountId];
-                if (GuiUtils.FilterCombo($"Mount", mountLabel, () =>
+                var mountLabel = preset.LocationModel.Mount.LastLocationMount ? "上次使用的坐騎" : mounts[mountId];
+                if (GuiUtils.FilterCombo($"坐騎##Mount", mountLabel, () =>
                     {
-                        if (GuiUtils.FilterSelectable($"Last used mount", preset.LocationModel.Mount.LastLocationMount))
+                        if (GuiUtils.FilterSelectable($"上次使用的坐騎##Last used mount", preset.LocationModel.Mount.LastLocationMount))
                         {
                             preset.LocationModel.Mount = new() { LastLocationMount = true };
                             return true;
                         }
 
-                        GuiUtils.HoverTooltip("The mount that was summoned when the character logged off, can be unmounted");
+                        GuiUtils.HoverTooltip("使用角色登出時召喚的坐騎；也可能呈現未騎乘狀態。");
 
                         foreach (var entry in mounts)
                         {
@@ -464,7 +464,7 @@ namespace TitleEdit.Windows.Tabs
                     Services.LobbyService.UpdateLiveEditCharacterMount();
                 }
 
-                ImGuiComponents.HelpMarker("You can only select mounts you have unlocked across all of your characters\nTry logging into each character if you think any are missing");
+                ImGuiComponents.HelpMarker("只能選擇所有角色中曾解鎖的坐騎。\n若有坐騎遺漏，請嘗試依序登入各個角色。");
                 if (Services.ObjectTable.LocalPlayer != null)
                 {
                     ImGui.SameLine();
@@ -472,12 +472,12 @@ namespace TitleEdit.Windows.Tabs
                     unsafe
                     {
                         var character = (CharacterExpanded*)Services.ObjectTable.LocalPlayer.Address;
-                        if (ImGui.Button($"Apply current##Mount"))
+                        if (ImGui.Button($"套用目前坐騎##Mount"))
                         {
                             Services.LocationService.SetMount(ref preset.LocationModel, &character->Character);
                         }
 
-                        GuiUtils.HoverTooltip($"Current mount: {mounts[character->Character.Mount.MountId]}" + (character->Character.Mount.MountId == 1 ? "\nThis will also save your chocobo's gear and color" : ""));
+                        GuiUtils.HoverTooltip($"目前坐騎：{mounts[character->Character.Mount.MountId]}" + (character->Character.Mount.MountId == 1 ? "\n這也會儲存搭檔陸行鳥的裝備與顏色" : ""));
                     }
                 }
 
@@ -492,9 +492,9 @@ namespace TitleEdit.Windows.Tabs
                 //Position
                 if (!liveEditing)
                 {
-                    ImGui.InputFloat3($"Camera Position", ref preset.LocationModel.CameraPosition);
+                    ImGui.InputFloat3($"鏡頭位置##Camera Position", ref preset.LocationModel.CameraPosition);
                 }
-                else if (ImGui.DragFloat3($"Camera Position##LiveEdit", ref preset.LocationModel.CameraPosition, 0.1f))
+                else if (ImGui.DragFloat3($"鏡頭位置##LiveEdit", ref preset.LocationModel.CameraPosition, 0.1f))
                 {
                     UpdateLiveEdit();
                 }
@@ -505,13 +505,13 @@ namespace TitleEdit.Windows.Tabs
                     ImGui.SetCursorPosX(buttonPosX);
                     unsafe
                     {
-                        if (ImGui.Button($"Apply current##Camera Position"))
+                        if (ImGui.Button($"套用目前鏡頭位置##Camera Position"))
                         {
                             preset.LocationModel.CameraPosition = Services.CameraService.CurrentCamera->Camera.SceneCamera.Position;
                         }
 
                         var pos = Services.CameraService.CurrentCamera->Camera.SceneCamera.Position;
-                        GuiUtils.HoverTooltip($"Current camera Position: ({pos.X:F2}; {pos.Y:F2}; {pos.Z:F2}) ");
+                        GuiUtils.HoverTooltip($"目前鏡頭位置：({pos.X:F2}; {pos.Y:F2}; {pos.Z:F2}) ");
                     }
                 }
 
@@ -547,18 +547,18 @@ namespace TitleEdit.Windows.Tabs
                     {
                         var (yaw, pitch) = Utils.GetAnglesFromVector(Services.CameraService.CurrentCamera->Camera.SceneCamera.LookAtVector - Services.CameraService.CurrentCamera->Camera.SceneCamera.Position);
 
-                        if (ImGui.Button($"Apply current##Camera Orientation"))
+                        if (ImGui.Button($"套用目前鏡頭方向##Camera Orientation"))
                         {
                             preset.LocationModel.Yaw = yaw;
                             preset.LocationModel.Pitch = pitch;
                             preset.LocationModel.Roll = Services.CameraService.CurrentCamera->Roll;
                         }
 
-                        GuiUtils.HoverTooltip($"Current camera Orientation: ({yaw * Utils.RadToDegreeRatio:F2}; {pitch * Utils.RadToDegreeRatio:F2}; {Services.CameraService.CurrentCamera->Roll * Utils.RadToDegreeRatio:F2}");
+                        GuiUtils.HoverTooltip($"目前鏡頭方向：({yaw * Utils.RadToDegreeRatio:F2}; {pitch * Utils.RadToDegreeRatio:F2}; {Services.CameraService.CurrentCamera->Roll * Utils.RadToDegreeRatio:F2}");
                     }
                 }
 
-                if (ImGui.SliderFloat($"FOV", ref preset.LocationModel.Fov, 0.01f, 3f))
+                if (ImGui.SliderFloat($"視野角度（FOV）##FOV", ref preset.LocationModel.Fov, 0.01f, 3f))
                 {
                     UpdateLiveEdit();
                 }
@@ -569,16 +569,16 @@ namespace TitleEdit.Windows.Tabs
                     ImGui.SetCursorPosX(buttonPosX);
                     unsafe
                     {
-                        if (ImGui.Button($"Apply current##FOV"))
+                        if (ImGui.Button($"套用目前視野角度##FOV"))
                         {
                             preset.LocationModel.Fov = Services.CameraService.CurrentCamera->Camera.SceneCamera.RenderCamera->FoV;
                         }
 
-                        GuiUtils.HoverTooltip($"Current camera FOV: {Services.CameraService.CurrentCamera->Camera.SceneCamera.RenderCamera->FoV:F2}");
+                        GuiUtils.HoverTooltip($"目前鏡頭視野角度：{Services.CameraService.CurrentCamera->Camera.SceneCamera.RenderCamera->FoV:F2}");
                     }
                 }
 
-                if (GuiUtils.Combo($"Logo", ref preset.LocationModel.TitleScreenLogo))
+                if (GuiUtils.Combo($"標誌##Logo", ref preset.LocationModel.TitleScreenLogo))
                 {
                     UpdateLiveEdit();
                     if (liveEditing)
@@ -587,7 +587,7 @@ namespace TitleEdit.Windows.Tabs
                     }
                 }
 
-                if (GuiUtils.DrawUiColorPicker("Menu color", ref preset.LocationModel.UiColor))
+                if (GuiUtils.DrawUiColorPicker("選單色彩##Menu color", ref preset.LocationModel.UiColor))
                 {
                     UpdateLiveEdit();
                     if (liveEditing)
@@ -596,17 +596,17 @@ namespace TitleEdit.Windows.Tabs
                     }
                 }
 
-                if (GuiUtils.Combo($"Title screen movie", ref preset.LocationModel.TitleScreenMovie))
+                if (GuiUtils.Combo($"標題畫面影片##Title screen movie", ref preset.LocationModel.TitleScreenMovie))
                 {
                     UpdateLiveEdit();
                 }
 
-                ImGuiComponents.HelpMarker("Defines the cinematic that plays when idling in title screen for 60 seconds");
+                ImGuiComponents.HelpMarker("設定在標題畫面閒置 60 秒後播放的影片。");
             }
 
             using (var color = ImRaii.PushColor(ImGuiCol.Text, GuiUtils.WarningColor))
             {
-                if (ImGui.Checkbox($"Experimental: Save world layout", ref preset.LocationModel.SaveLayout))
+                if (ImGui.Checkbox($"實驗性功能：儲存世界場景配置##Save world layout", ref preset.LocationModel.SaveLayout))
                 {
                     UpdateLiveEdit();
                     LiveEditReloadScene();
@@ -614,20 +614,20 @@ namespace TitleEdit.Windows.Tabs
 
                 color.Pop();
 
-                ImGuiComponents.HelpMarker("Experimental feature to save world layout (e.g. changes that happen when you progress MSQ).\nWorks fairly well out in the world but often has issues in instances.\nThis will also increase the preset file size by around 50kb depending on the zone");
+                ImGuiComponents.HelpMarker("儲存世界場景配置的實驗性功能（例如推進主線任務後產生的變化）。\n在開放世界通常運作良好，但在副本中可能發生問題。\n依區域而定，這也會使預設檔案增加約 50 KB。");
                 color.Push(ImGuiCol.Text, GuiUtils.WarningColor);
                 if (preset.LocationModel.SaveLayout)
                 {
-                    if (ImGui.Checkbox($"Experimental: Save world layout vfx objects", ref preset.LocationModel.UseVfx))
+                    if (ImGui.Checkbox($"實驗性功能：儲存世界場景的特效物件##Save world layout vfx objects", ref preset.LocationModel.UseVfx))
                     {
                         UpdateLiveEdit();
                         LiveEditReloadScene();
                     }
 
                     color.Pop();
-                    ImGuiComponents.HelpMarker("The game often leaves \'dead\' vfx objects that will play on load that will play on load.\nUnchecking this option should help with this specific issue.");
+                    ImGuiComponents.HelpMarker("遊戲常會留下已失效、卻仍在載入時播放的特效物件。\n取消此選項可減少這類問題。");
                     color.Push(ImGuiCol.Text, GuiUtils.WarningColor);
-                    if (ImGui.Checkbox($"Experimental: Save housing layout", ref preset.LocationModel.SaveHousing))
+                    if (ImGui.Checkbox($"實驗性功能：儲存房屋配置##Save housing layout", ref preset.LocationModel.SaveHousing))
                     {
                         UpdateLiveEdit();
                         LiveEditReloadScene();
@@ -635,18 +635,18 @@ namespace TitleEdit.Windows.Tabs
 
                     if (preset.LocationModel.Active?.Count == 0)
                     {
-                        ImGui.TextWrapped("There is no layout data collected for this preset, you need to go to the zone of this preset and click Apply Current next to the zone name");
+                        ImGui.TextWrapped("此預設尚未收集場景配置資料。請前往預設所屬區域，並點擊區域名稱旁的「套用目前區域」。");
                     }
                 }
             }
 
-            if (ImGui.Checkbox($"Save festivals", ref preset.LocationModel.SaveFestivals))
+            if (ImGui.Checkbox($"儲存季節活動裝飾##Save festivals", ref preset.LocationModel.SaveFestivals))
             {
                 UpdateLiveEdit();
                 LiveEditReloadScene();
             }
 
-            ImGuiComponents.HelpMarker("Festivals are event decorations");
+            ImGuiComponents.HelpMarker("季節活動是遊戲活動期間顯示的場景裝飾。");
 
             ImGui.TextUnformatted($"預設檔案：{preset.FileName}");
             using (var color = ImRaii.PushColor(ImGuiCol.Text, GuiUtils.WarningColor))
@@ -860,12 +860,12 @@ namespace TitleEdit.Windows.Tabs
             GuiUtils.HoverTooltip(() =>
             {
                 ImGui.PushTextWrapPos(GuiUtils.GuiScale(400f));
-                ImGui.TextColored(new Vector4(0, 1, 0, 1), "Song Info");
-                ImGui.TextWrapped($"Title: {bgm.Title}");
-                ImGui.TextWrapped(string.IsNullOrEmpty(bgm.Location) ? "Location: Unknown" : $"Location: {bgm.Location}");
+                ImGui.TextColored(new Vector4(0, 1, 0, 1), "曲目資訊");
+                ImGui.TextWrapped($"名稱：{bgm.Title}");
+                ImGui.TextWrapped(string.IsNullOrEmpty(bgm.Location) ? "出處：未知" : $"出處：{bgm.Location}");
                 if (!string.IsNullOrEmpty(bgm.AdditionalInfo))
-                    ImGui.TextWrapped($"Info: {bgm.AdditionalInfo}");
-                ImGui.TextUnformatted($"File path: {bgm.FilePath}");
+                    ImGui.TextWrapped($"資訊：{bgm.AdditionalInfo}");
+                ImGui.TextUnformatted($"檔案路徑：{bgm.FilePath}");
                 ImGui.PopTextWrapPos();
             });
         }

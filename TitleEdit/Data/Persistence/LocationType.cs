@@ -5,9 +5,9 @@ namespace TitleEdit.Data.Persistence
 
     public enum LocationType
     {
-        [EnumTranslation("Title screen")]
+        [EnumTranslation("標題畫面")]
         TitleScreen,
-        [EnumTranslation("Character select")]
+        [EnumTranslation("角色選擇畫面")]
         CharacterSelect
     }
 }

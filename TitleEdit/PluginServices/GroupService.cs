@@ -162,14 +162,14 @@ namespace TitleEdit.PluginServices
             AddGroup(new()
             {
                 Name = "Random",
-                Tooltip = "Contains all of your title screen presets",
+                Tooltip = "包含所有標題畫面預設",
                 FileName = "?/RandomTitleScreen.json",
                 LocationType = LocationType.TitleScreen
             });
             AddGroup(new()
             {
                 Name = "Random",
-                Tooltip = "Contains all of your character select presets",
+                Tooltip = "包含所有角色選擇畫面預設",
                 FileName = "?/RandomCharacterSelect.json",
                 LocationType = LocationType.CharacterSelect
             });
