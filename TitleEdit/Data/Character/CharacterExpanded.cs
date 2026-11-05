@@ -9,7 +9,7 @@ namespace TitleEdit.Data.Character
         public GameObjectVTable* VTable;
         [FieldOffset(0x0)]
         public FFXIVClientStructs.FFXIV.Client.Game.Character.Character Character;
-        [FieldOffset(0x5FC)]
+        [FieldOffset(0x600)]
         public MovementMode MovementMode;
 
         public void SetScale(float scale)
